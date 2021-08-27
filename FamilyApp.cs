@@ -9,20 +9,13 @@ namespace Oblig1Modul3
     public class FamilyApp
     {
         public List<Person> _person = new List<Person>();
+        private string _children = "";
         public string WelcomeMessage = "Heisann og velkommen.";
         public string CommandPrompt = "Skriv Hjelp for hjelp.\nSkriv Liste for full liste av slekt\nSkriv vis <id> for en spesifik id.\nEks 'Vis 15'\n\n";
         int i;
-        public FamilyApp(params Person[] values)
+        public FamilyApp(params Person[] people)
         {
-            if(values.Length >=1)
-            {
-                while (i < (values.Length))
-                {
-                    _person.Add(values[i]);
-                    Console.Write($"Test fail in {values[0].Father.FirstName} \n");
-                    i++;
-                }
-            }
+            _person = new List<Person>(people);
         }
         string PrintStuff(int num)
         {
@@ -36,7 +29,6 @@ namespace Oblig1Modul3
             var mom = "";
             if (t.FirstName != "") first = t.FirstName + " ";
             if (t.LastName != "") last = t.LastName + " ";
-            if (t.FirstName != "") first = t.FirstName + " ";
             if (t.ID != 0) id = "(ID=" + t.ID + ") ";
             if (t.BirthYear != 0) birth = "Født: " + t.BirthYear + " ";
             if (t.DeathYear != 0) death = "Død: " + t.DeathYear + " ";
@@ -44,6 +36,13 @@ namespace Oblig1Modul3
             if (t.Mother != null) mom = "Mor: " + t.Mother.FirstName + "(ID=" + t.Mother.ID + ")";
             return (first + last + id + birth + death + dad + mom);
         }
+
+        private static string GetField(string value, string label = "")
+        {
+            return value == "" ? "" : label + value + " ";
+        }
+
+
         public string HandleCommand(string value)
         {
             if (value == "Hjelp")
@@ -73,24 +72,42 @@ namespace Oblig1Modul3
                 {
                     if (words[0] == "vis")
                     {
-                        Console.WriteLine($"\n\nThis is your number {number}\n\n");
-                        var t = _person[(number-1)];
-                        var id = "";
-                        var first = "";
-                        var last = "";
-                        var birth = "";
-                        var death = "";
+                        var t = _person[number -1];
                         var dad = "";
                         var mom = "";
-                        if (t.FirstName != "") first = t.FirstName + " ";
-                        if (t.LastName != "") last = t.LastName + " ";
-                        if (t.FirstName != "") first = t.FirstName + " ";
-                        if (t.ID != 0) id = "(ID=" + t.ID + ") ";
-                        if (t.BirthYear != 0) birth = "Født: " + t.BirthYear + " ";
-                        if (t.DeathYear != 0) death = "Død: " + t.DeathYear + " ";
-                        if (t.Father != null) dad = "Far: " + t.Father.FirstName + "(ID=" + t.Father.ID + ") ";
+                        if (t.Father != null) dad = "Far: " + t.Father.FirstName + " (ID=" + t.Father.ID + ") ";
                         if (t.Mother != null) mom = "Mor: " + t.Mother.FirstName + "(ID=" + t.Mother.ID + ")";
-                        return (first + last + id + birth + death + dad + mom);
+                        foreach (Person newP in _person)
+                        {
+                            if(t.Father.ID == t.ID)
+                            {
+                                _children += newP +"\n    ";
+                            }
+                        }
+                        if(_children != "")//This person has children
+                        {
+                            return (GetField(t.FirstName) +
+                            GetField(t.LastName) +
+                            "(ID=" + t.ID + ") " +
+                            GetField(t.BirthYear != 0 ? t.BirthYear.ToString() : "", "Født: ") +
+                            GetField(t.DeathYear != 0 ? t.DeathYear.ToString() : "", "Død: ") +
+                            dad +
+                            mom +
+                            "\n  Barn:\n    " +
+                            _children
+                            ) ;
+                        }
+                        else//Does not have children
+                        {
+                            return (GetField(t.FirstName) +
+                            GetField(t.LastName) +
+                            "(ID=" + t.ID + ") " +
+                            GetField(t.BirthYear != 0 ? t.BirthYear.ToString() : "", "Født: ") +
+                            GetField(t.DeathYear != 0 ? t.DeathYear.ToString() : "", "Død: ") +
+                            dad +
+                            mom);
+                        }
+                        
                     }
                     else return "That is not valid";
                 }

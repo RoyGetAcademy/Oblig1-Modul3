@@ -8,34 +8,34 @@ namespace Oblig1Modul3
 {
 	public class Person
 	{
-		public int myID = 100;
-		public int ID { get; set; } = 0;
+		public int ID { get; set; }
 		public string FirstName { get; set; } = "";
 		public string LastName { get; set; } = "";
-		public int BirthYear { get; set; } = 0;
-		public int DeathYear { get; set; } = 0;
+		public int BirthYear { get; set; }
+		public int DeathYear { get; set; }
 
 		public Person Father = null;
 		public Person Mother = null;
 
-		public string GetDescription()
+		private static string GetField(string value, string label = "")
+        {
+            return value == "" ? "" : label + value + " ";
+        }
+
+        public string GetDescription()
 		{
-			var id = "";
-			var first = "";
-			var last = "";
-			var birth = "";
-			var death = "";
 			var dad = "";
 			var mom = "";
-			if (FirstName != "") first = FirstName + " ";
-			if (LastName != "") last = LastName + " ";
-			if (FirstName != "") first = FirstName + " ";
-			if (ID != 0) id = "(ID=" + ID + ") ";
-			if (BirthYear != 0) birth = "Født: " + BirthYear + " ";
-			if (DeathYear != 0) death = "Død: " + DeathYear + " ";
 			if (Father != null) dad = "Far: " + Father.FirstName + "(ID=" + Father.ID + ") ";
 			if (Mother != null) mom = "Mor: " + Mother.FirstName + "(ID=" + Mother.ID + ")";
-			return (first + last + id + birth + death + dad + mom);
+
+			return GetField(FirstName) + 
+					GetField(LastName) + 
+					"(ID=" + ID + ") " + 
+					GetField(BirthYear != 0 ? BirthYear.ToString() : "", "Født: ") +
+					GetField(DeathYear != 0 ? DeathYear.ToString() : "", "Død: ") +
+					dad + 
+					mom;
 			/*
 			string str = "";
 			str += FirstName != null ? FirstName + " " : "";
